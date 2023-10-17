@@ -81,13 +81,13 @@ bool Grafo::isGrafoSimples() {
     for(int i = 0; i < this->V; i++) {
         for (int j = 0; j < this->V; j++) {
             if(i == j) {
-                return(this->adj[i][j] == 0);
+                if(this->adj[i][j] != 0) return false;
             }
             else {
                 if (this->adj[i][j] != 0 && this->adj[j][i] != 0) return false;
-                return true;
             }
         }
         std::cout << std::endl;
     }
+    return true;
 }   
