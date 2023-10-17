@@ -59,6 +59,39 @@ void Grafo::mudaPeso(int v, int w, int p, int np) {
 
 void Grafo::imprimeGrafo() {
 
+    std::cout << "Vértices: (";
+    
+    for (int i = 0; i < this->V; i++ ) {
+        std::cout << " " << i;
+    }
+    std::cout << ")" << std::endl;
+
+    std::cout << "Arestas:" << std::endl;
+
+    for(int i = 0; i < this->V; i++) {
+        for (int j = 0; j < this->V; j++) {
+            if (this->adj[i][j] != 0) {
+                std::cout << "Aresta (" << i << ", " << j << ") com peso " << this->adj[i][j] << "." << std::endl;
+            }
+        }
+    }
+}
+
+bool Grafo::isGrafoSimples() {
+    for(int i = 0; i < this->V; i++) {
+        for (int j = 0; j < this->V; j++) {
+            if(i == j) {
+                if(this->adj[i][j] != 0) return false;
+            }
+            else {
+                if (this->adj[i][j] != 0 && this->adj[j][i] != 0) return false;
+            }
+        }
+    }
+    return true;
+}   
+
+void Grafo::imprimeMatrizAdj() {
     std::cout << "Matriz de Adjacências\n"<< std::endl;
     std::cout << "V | ";
     
@@ -77,17 +110,6 @@ void Grafo::imprimeGrafo() {
     }
 }
 
-bool Grafo::isGrafoSimples() {
-    for(int i = 0; i < this->V; i++) {
-        for (int j = 0; j < this->V; j++) {
-            if(i == j) {
-                if(this->adj[i][j] != 0) return false;
-            }
-            else {
-                if (this->adj[i][j] != 0 && this->adj[j][i] != 0) return false;
-            }
-        }
-        std::cout << std::endl;
-    }
-    return true;
-}   
+bool Grafo::isAdjacente(int v, int w) {
+    return (this->adj[v][w] != 0);
+}

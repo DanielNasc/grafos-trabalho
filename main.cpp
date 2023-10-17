@@ -48,15 +48,8 @@ int main(void) {
 
     // Testando mudança de peso
     g->mudaPeso(4, 5, -15, -13); // Faz o L
-    
-    g->imprimeGrafo();
-    if(g->isGrafoSimples()) {
-        std::cout << "O grafo é simples." << std::endl;
-    }
-    else {
-        std::cout << "O grafo NÃO é simples." << std::endl;
-    }
 
+    g->imprimeMatrizAdj();
 
     return 0;
 }
