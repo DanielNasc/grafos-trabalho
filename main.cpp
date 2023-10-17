@@ -40,6 +40,23 @@ int main(void) {
         return 1;
     }
 
+    // Testando remoção
+    g->removeAresta(1, 5, 11);
+    std::cout << "E: " << g->countArestas() << std::endl;
+    g->removeAresta(3, 9, 45);
+
+
+    // Testando mudança de peso
+    g->mudaPeso(4, 5, -15, -13); // Faz o L
+    
+    g->imprimeGrafo();
+    if(g->isGrafoSimples()) {
+        std::cout << "O grafo é simples." << std::endl;
+    }
+    else {
+        std::cout << "O grafo NÃO é simples." << std::endl;
+    }
+
 
     return 0;
 }

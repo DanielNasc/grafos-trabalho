@@ -6,7 +6,7 @@ class Grafo {
     public:
         Grafo();                                    // Construtor de G com V = 1;
         Grafo(int V);                               // Construtor de G;
-        bool IsVetice(int v);                       // Verifica se v ∈ V (G) ou não;  
+        bool isVertice(int v);                       // Verifica se v ∈ V (G) ou não;  
         void addAresta(int v, int w, int p);        // Adiciona uma aresta em G entre os vértices v e w com peso p.
         void removeAresta(int v, int w, int p);     // Remove uma e existe uma aresta em G entre os vértices v e w com peso p.
         void mudaPeso(int v, int w, int p, int np); // Modifica valor de peso de umaaresta em G entre os vértices v e w com peso p.
