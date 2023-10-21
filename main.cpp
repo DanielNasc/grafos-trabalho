@@ -4,6 +4,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <queue>
+#include <set>
 
 #include "grafo.h"
 
@@ -143,6 +145,7 @@ int main(void) {
 
     g->addAresta(1, 3, 7);
     g->addAresta(2, 6, 3);
+    g->addAresta(4, 1, 3);
 
     g->imprimeGrafo();
 
@@ -154,6 +157,15 @@ int main(void) {
 
     std::cout << "Arestas " << g->countArestas() << std::endl;; 
     std::cout << "Vértices: " << g->countVertices() << std::endl;
+
+    // Verificando se o grafo é bipartido
+    bool eBipartido = g->isBipartido();
+
+    if (eBipartido) {
+        std::cout << "O grafo G é bipartido." << std::endl;
+    } else {
+        std::cout << "O grafo G não é bipartido." << std::endl;
+    }
     
     g->removeGrafo();
     std::cout << "Grafo removido." << std::endl;

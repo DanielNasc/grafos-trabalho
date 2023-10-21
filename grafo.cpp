@@ -4,6 +4,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <queue>
+#include <set>
 
 #include "grafo.h"
 
@@ -143,28 +145,128 @@ bool Grafo::isGrafoSimples() {
 
 /*
 Um grafo é uma árvore quando obedece as seguintes propriedades:
-    1. Deve ser um grafo conexo.
-    2. Não deve conter ciclos.
-    3. Deve ter exatamente n - 1 arestas, onde n é o número de vértices.*/
+    1. Acíclico
+    2. Conexo
+    4. Número correto de arestas: tem exatamente n - 1 arestas, onde n é o número de vértices na árvore.*/
 
 bool Grafo::isArvore() {
-    // Número de vértices alcançáveis
-    int numVerticesAlcancaveis = 0;
-    std::vector<bool> visitado(this->V, false);
+    // Verifica se o grafo é acíclico (não contém ciclos)
+    if (ContemCiclo()) {
+        return false;
+    }
 
-    for (int v = 0; v < this->V; v++) {
-        if (!visitado[v]) {
-            numVerticesAlcancaveis++;
-            visitado[v] = true;
-            for (const auto& E : this->listaAdj[v]) {
-                int w = E.first;
-                if (visitado[w]) {
-                    return false; // Ciclo encontrado
+    // Verifica se o grafo é conectado
+    std::set<int> visitados;
+
+    // Comece a DFS a partir do primeiro vértice (pode ser qualquer vértice)
+    DFS(0, visitados);
+
+    // Verifique se todos os vértices foram visitados
+    if (visitados.size() != this->V) {
+        return false;
+    }
+
+    return true;
+}
+
+bool Grafo::isBipartido() {
+    // Inicializa os conjuntos de vértices das partições
+    std::set<int> particaoA;
+    std::set<int> particaoB;
+
+    // Inicializa a fila de vértices para a BFS
+    std::queue<int> fila;
+
+    // Começa a BFS a partir de um vértice arbitrário (pode ser qualquer vértice)
+    int verticeInicial = 0;
+
+    // Adiciona o vértice inicial à Partição A
+    particaoA.insert(verticeInicial);
+
+    fila.push(verticeInicial);
+
+    while (!fila.empty()) {
+        int v = fila.front();
+        fila.pop();
+
+        // Verifica a partição atual
+        bool estaEmParticaoA = (particaoA.find(v) != particaoA.end());
+
+        for (const auto& aresta : listaAdj[v]) {
+            int w = aresta.first;
+
+            // Se w não está em nenhuma partição, coloque-o na outra partição
+            if (particaoA.find(w) == particaoA.end() && particaoB.find(w) == particaoB.end()) {
+                if (estaEmParticaoA) {
+                    particaoB.insert(w);
+                } else {
+                    particaoA.insert(w);
                 }
-                visitado[w] = true;
+
+                fila.push(w);
+            } else if ((estaEmParticaoA && particaoA.find(w) != particaoA.end()) || (!estaEmParticaoA && particaoB.find(w) != particaoB.end())) {
+                // Se w já está na mesma partição que v, o grafo não é bipartido
+                return false;
             }
         }
     }
 
-    return numVerticesAlcancaveis == this->V && this->E == (this->V - 1);
+    // Se todos os vértices foram coloridos e não houve conflitos de partição, o grafo é bipartido
+    return true;
+}
+
+void Grafo::DFS(int v, std::set<int>& visitados) {
+    visitados.insert(v);
+
+    for (const auto& E : listaAdj[v]) {
+        int w = E.first;
+        if (visitados.find(w) == visitados.end()) {
+            DFS(w, visitados);
+        }
+    }
+}
+
+
+bool Grafo::isConexo() {
+    std::set<int> visitados;
+
+    // Comece a DFS a partir do primeiro vértice (pode ser qualquer vértice)
+    DFS(0, visitados);
+
+    // Verifique se todos os vértices foram visitados
+    return visitados.size() == this->V;
+}
+
+bool Grafo::DFSContemCiclo(int v, std::set<int>& visitados, std::set<int>& pilhaRecursao) {
+    visitados.insert(v);
+    pilhaRecursao.insert(v);
+
+    for (const auto& E : listaAdj[v]) {
+        int w = E.first;
+
+        if (pilhaRecursao.find(w) != pilhaRecursao.end()) {
+            // Um ciclo foi encontrado
+            return true;
+        }
+
+        if (visitados.find(w) == visitados.end() && DFSContemCiclo(w, visitados, pilhaRecursao)) {
+            return true;
+        }
+    }
+
+    pilhaRecursao.erase(v);
+    return false;
+}
+
+bool Grafo::ContemCiclo() {
+    std::set<int> visitados;
+    std::set<int> pilhaRecursao;
+
+    for (int i = 0; i < this->V; i++) {
+        if (DFSContemCiclo(i, visitados, pilhaRecursao)) {
+            return true;
+        }
+    }
+
+    return false;
 }
