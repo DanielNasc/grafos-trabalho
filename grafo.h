@@ -2,6 +2,7 @@ class Grafo {
     private:
         int V;
         int E;
+        // Lista de adjacência com pares (destino, peso)
         std::vector<std::vector<std::pair<int, int>>> listaAdj;
     public:
         Grafo();                                    // Construtor de G com V = 1;
