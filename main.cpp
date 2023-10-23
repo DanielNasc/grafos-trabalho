@@ -167,6 +167,28 @@ int main(void) {
         std::cout << "O grafo G não é bipartido." << std::endl;
     }
     
+    // Testando Complemento de um grafo
+    Grafo complementog = g->complemento();
+
+    std::cout << "Complemento de G:" << std::endl;
+    complementog.imprimeGrafo();
+
+    // Testando isAdjacente
+    g->isAdjacente(1, 4);
+    g->isAdjacente(0, 3);
+    g->isAdjacente(5, 1);
+
+    // Testando Adjacentes
+    std::vector<std::pair<int, int>> adjacencia = g->adjacentes(0);
+    if (adjacencia.empty()) {
+        std::cout << "A lista de adjacência de v não pôde ser obtida." << std::endl;
+    } else {
+        std::cout << "Lista de adjacência do vértice " << v << ":" << std::endl;
+        for (const auto &E : adjacencia) {
+            std::cout << "Destino: " << E.first << " Peso: " << E.second << std::endl;
+        }
+    }
+
     g->removeGrafo();
     std::cout << "Grafo removido." << std::endl;
 

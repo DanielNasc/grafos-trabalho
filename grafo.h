@@ -18,9 +18,9 @@ class Grafo {
         bool isGrafoSimples();                      // Retorna se o grafo G é um grafo simples ou não
         bool isArvore();                            // Retorna se o grafo G é uma árvore ou não;
         bool isBipartido();                         // Retorna se o grafo G é bipartido ou não;
-        Grafo *complemento();                         // Retorna o grafo complementar de G;
+        Grafo complemento();                         // Retorna o grafo complementar de G;
         bool isAdjacente(int v, int w);             // Verifica se vw ∈ E(G);
-        int *adjacentes(int v);                     // Devolve a lista de adjacência de v em G.
+        std::vector<std::pair<int, int>> adjacentes(int v);                     // Devolve a lista de adjacência de v em G.
         int *incidentes(int v);                     // Devolve as arestas incidentes a v em G.
         int **matrizAdj();                          // Constrói a matriz de adjacência de G, onde a posição ai,j corresponde ao peso da aresta vivj, para todo 1 ≤ i ≤ j ≤ n
         void imprimeMatrizAdj();                    // Imprime a matriz de adjacência de G;

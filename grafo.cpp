@@ -335,3 +335,59 @@ bool Grafo::ContemCiclo() {
 
     return false;
 }
+
+// Função para criar o complemento do grafo
+Grafo Grafo::complemento() {
+    Grafo complementoGrafo(this->V);
+
+    for (int i = 0; i < this->V; i++) {
+        for (int j = 0; j < this->V; j++) {
+            if (i != j) {
+                bool arestaEncontrada = false;
+                for (const auto &E : this->listaAdj[i]) {
+                    if (E.first == j) {
+                        arestaEncontrada = true;
+                        break;
+                    }
+                }
+
+                if (!arestaEncontrada) {
+                    // Se não houver uma aresta de i para j em G, adiciona em G'
+                    complementoGrafo.addAresta(i, j, 1); // Pode escolher qualquer peso
+                }
+            }
+        }
+    }
+
+    return complementoGrafo;
+}
+
+// Função para verificar se uma aresta (v, w) existe em G
+bool Grafo::isAdjacente(int v, int w) {
+    // Verifica se os vértices de vi e vj são válidos
+    if (this->isVertice(v) && this->isVertice(w)) {
+        for (const auto &E : listaAdj[v]) {
+            if (E.first == w) {
+                std::cout << "A aresta (" << v << ", " << w << ") existe!" << std::endl;
+                return true; // A aresta existe
+            }
+        }
+        std::cout << "A aresta (" << v << ", " << w << ") NÃO existe!" << std::endl;
+        return false; // A aresta não existe
+    }
+    else {
+        std::cout << "Vértices inválidos!" << std::endl;
+        return false;
+    }
+}
+
+// Função para obter a lista de adjacência de um vértice v
+std::vector<std::pair<int, int>> Grafo::adjacentes(int v) {
+        // Verifica se o vértice v é válido
+        if (!this->isVertice(v)) {
+            std::cout << "Vértice inválido!" << std::endl;
+            return std::vector<std::pair<int, int>>();
+        }
+
+        return listaAdj[v];
+    }
