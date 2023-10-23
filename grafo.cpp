@@ -383,11 +383,31 @@ bool Grafo::isAdjacente(int v, int w) {
 
 // Função para obter a lista de adjacência de um vértice v
 std::vector<std::pair<int, int>> Grafo::adjacentes(int v) {
-        // Verifica se o vértice v é válido
+    // Verifica se o vértice v é válido
+    if (!this->isVertice(v)) {
+        std::cout << "Vértice inválido!" << std::endl;
+        return std::vector<std::pair<int, int>>();
+    }
+
+    return listaAdj[v];
+}
+
+// Função para obter as arestas incidentes ao vértice v
+std::vector<std::pair<int, int>> Grafo::incidentes(int v) {
+    // Verifica se o vértice v é válido
         if (!this->isVertice(v)) {
             std::cout << "Vértice inválido!" << std::endl;
             return std::vector<std::pair<int, int>>();
         }
 
-        return listaAdj[v];
-    }
+        std::vector<std::pair<int, int>> incidentes;
+        for (int i = 0; i < this->V; i++) {
+            for (const auto &E : listaAdj[i]) {
+                if (E.first == v) {
+                    incidentes.emplace_back(i, E.second);
+                }
+            }
+        }
+
+        return incidentes;
+}

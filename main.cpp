@@ -189,6 +189,18 @@ int main(void) {
         }
     }
 
+    // Testando Incidentes
+    std::vector<std::pair<int, int>> incidentes = g->incidentes(1);
+
+    if (incidentes.empty()) {
+        std::cout << "Não há arestas incidentes ao vértice "<< v << std::endl;
+    } else {
+        std::cout << "Arestas incidentes ao vértice " << v << ":" << std::endl;
+        for (const auto &E : incidentes) {
+            std::cout << "Origem: " << E.first << " Peso: " << E.second << std::endl;
+        }
+    }
+
     g->removeGrafo();
     std::cout << "Grafo removido." << std::endl;
 
