@@ -185,7 +185,11 @@ std::vector<int>Grafo::recuperaPeso(int v, int w) {
     return pesos;
 }
 
-// Função que retorna se o grafo G é um grafo simples ou não
+/*
+ Função que retorna se o grafo G é um grafo simples ou não
+Saídas: 
+    true ou false
+ */ 
 bool Grafo::isGrafoSimples() {
     for (int v = 0; v < this->V; v++) {
         for (const auto& E : listaAdj[v]) {
@@ -224,7 +228,7 @@ bool Grafo::isArvore() {
     std::set<int> visitados;
 
     // DFS a partir do primeiro vértice
-    DFS(0, visitados);
+    BuscaDFS(0, visitados);
 
     // Verificando se todos os vértices foram visitados
     if (visitados.size() != this->V) {
@@ -234,6 +238,10 @@ bool Grafo::isArvore() {
     return true;
 }
 
+/*
+Função que retorna se o grafo é bipartido ou não
+Complexidade: O(V + E)
+*/
 bool Grafo::isBipartido() {
     // Inicializamos os conjuntos de vértices das partições
     std::set<int> particaoA;
@@ -280,23 +288,56 @@ bool Grafo::isBipartido() {
     return true;
 }
 
-void Grafo::DFS(int v, std::set<int>& visitados) {
+/*
+Percorre os vértices do grafo em profundidade, iniciando a busca em v ∈ V (G). Imprime a árvore
+de busca gerada pelo percurso, ou seja, um vetor que indica, para cada vértice v ∈ V (G), o vértice a partir do
+qual v foi alcançado pela primeira vez na busca;
+Complexidade: O(V + E)
+*/
+void Grafo::DFS(int v, std::set<int>& visitados, std::vector<int>& arvoreDeBusca) {
+    visitados.insert(v);
+
+    std::cout << "Visitando vértice " << v << std::endl;
+
+    for (const auto& E : listaAdj[v]) {
+        int w = E.first;
+        if (visitados.find(w) == visitados.end()) {
+            arvoreDeBusca[w] = v; // Definir a origem de w na árvore de busca
+            DFS(w, visitados, arvoreDeBusca);
+        }
+    }
+}
+
+// Função para iniciar a DFS a partir de um vértice
+void Grafo::iniciarDFS(int v) {
+    std::vector<int> arvoreDeBusca(this->V, -1); // Inicializa a árvore de busca
+    std::set<int> visitados; // Conjunto de vértices visitados
+    arvoreDeBusca[v] = v; // O vértice inicial é a raiz da árvore
+
+    DFS(v, visitados, arvoreDeBusca);
+
+    std::cout << "Árvore de busca resultante:" << std::endl;
+    for (int i = 0; i < this->V; i++) {
+        std::cout << "Vértice " << i << " é alcançado a partir de " << arvoreDeBusca[i] << std::endl;
+    }
+}
+
+void Grafo::BuscaDFS(int v, std::set<int>& visitados) {
     visitados.insert(v);
 
     for (const auto& E : listaAdj[v]) {
         int w = E.first;
         if (visitados.find(w) == visitados.end()) {
-            DFS(w, visitados);
+            BuscaDFS(w, visitados);
         }
     }
 }
-
 
 bool Grafo::isConexo() {
     std::set<int> visitados;
 
     // DFS a partir do primeiro vértice
-    DFS(0, visitados);
+    BuscaDFS(0, visitados);
 
     // Verificando se todos os vértices foram visitados
     return visitados.size() == this->V;

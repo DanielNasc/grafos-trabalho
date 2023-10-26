@@ -25,12 +25,14 @@ class Grafo {
         int **matrizAdj();                                      // Constrói a matriz de adjacência de G, onde a posição ai,j corresponde ao peso da aresta vivj, para todo 1 ≤ i ≤ j ≤ n
         void imprimeMatrizAdj();                                // Imprime a matriz de adjacência de G;
         bool isConexo();                                        // Retorna se G é conexo ou não
+        void DFS(int v, std::set<int>& visitados, std::vector<int>& arvoreDeBusca);
 
         // Funções adicionais
         int countArestas();                                     // Retorna o número de arestas de G;
         int countVertices();                                    // Retorna o número de vértices de G;
-        void DFS(int v, std::set<int>& visitados);
+        void BuscaDFS(int v, std::set<int>& visitados);
         bool ContemCiclo();
         bool DFSContemCiclo(int v, std::set<int>& visitados, std::set<int>& pilhaRecursao);
+        void iniciarDFS(int v);
 
 };

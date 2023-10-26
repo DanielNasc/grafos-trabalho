@@ -201,6 +201,10 @@ int main(void) {
         }
     }
 
+    // Testando DFS
+    std::cout << "Iniciando a DFS a partir do vértice " << 0 << ":" << std::endl;
+    g->iniciarDFS(0);
+
     g->removeGrafo();
     std::cout << "Grafo removido." << std::endl;
 
