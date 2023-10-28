@@ -189,6 +189,10 @@ int main(void) {
         }
     }
 
+    // Testando BFS
+    std::cout << "BFS:" << std::endl;
+    g->BFS(0);
+
     g->removeGrafo();
     std::cout << "Grafo removido." << std::endl;
 

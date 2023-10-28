@@ -6,6 +6,7 @@
 #include <vector>
 #include <queue>
 #include <set>
+#include <map>
 
 #include "grafo.h"
 
@@ -391,3 +392,51 @@ std::vector<std::pair<int, int>> Grafo::adjacentes(int v) {
 
         return listaAdj[v];
     }
+
+
+void Grafo::BFS(int v) {
+    if (!this->isVertice(v)) {
+        std::cerr << "Vértice inválido!" << std::endl;
+        return;
+    }
+
+    std::queue<int> q;
+    std::set<int> visitados;
+    std::map<int, int> arvore_de_busca;
+    
+    q.push(v);
+    visitados.insert(v);
+    arvore_de_busca[v] = -1;
+
+    while(!q.empty()) {
+        int v = q.front();
+        std::cout << "Queue: " << v << std::endl;
+        q.pop(); // Remove o primeiro elemento da fila
+
+
+        std::cout << "Visitando o vértice " << v << std::endl;
+        for (const auto& E: listaAdj[v]) {
+            int w = E.first;
+
+            if (visitados.find(w) == visitados.end()) {
+                visitados.insert(w);
+                q.push(w);
+                arvore_de_busca[w] = v;
+            }
+        }
+    }
+
+    std::cout << std::endl;
+    std::cout << "Árvore de busca em largura: " << std::endl;
+    
+    for (const auto& entry: arvore_de_busca) {
+        int vi = entry.first;
+        int parent = entry.second;
+
+        if (parent != -1) {
+            std::cout << "(" << vi << ", " << parent << ")" << std::endl;
+        } else {
+            std::cout << "(" << vi << ", " << "raiz" << ")" << std::endl;
+        }
+    }
+}
