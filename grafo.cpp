@@ -49,11 +49,17 @@ void Grafo::addAresta(int v, int w, int p) {
 void Grafo::imprimeGrafo() {
     for (int i = 0; i < V; i++) {
         std::cout << "Vértice " << i << " está conectado a:";
-        for (const auto& E : listaAdj[i]) {
-            int w = E.first;
-            int p = E.second;
-            std::cout << " (" << w << ", peso " << p << ")";
+
+        if (listaAdj[i].empty()) {
+            std::cout << " -";
+        } else {
+            for (const auto& E : listaAdj[i]) {
+                int w = E.first;
+                int p = E.second;
+                std::cout << " (" << w << ", peso " << p << ")";
+            }
         }
+
         std::cout << std::endl;
     }
 }

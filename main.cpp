@@ -45,6 +45,9 @@ int main(void) {
         return 1;
     }
 
+    std::cout << "Grafo G:" << std::endl;
+    g->imprimeGrafo();
+
     std::cout << "caminho de 0 até todos os outros vértices:" << std::endl;
     std::vector<std::pair<int, int>> caminho = g->caminhoMinimo(0);
     for (const auto &E : caminho) {
