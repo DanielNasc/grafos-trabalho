@@ -45,12 +45,13 @@ int main(void) {
         return 1;
     }
 
-    std::cout << "Caminho de 0 até 3: ";
-    std::vector<int> caminho = g->caminhoMinimo(0, 3);
-    for (int i = 0; i < caminho.size(); i++) {
-        std::cout << caminho[i] << " ";
+    std::cout << "caminho de 0 até todos os outros vértices:" << std::endl;
+    std::vector<std::pair<int, int>> caminho = g->caminhoMinimo(0);
+    for (const auto &E : caminho) {
+        std::cout << "Distância: " << E.first << " Pai: " << E.second << std::endl;
     }
-    std::cout << std::endl; 
+
+
 
     // g->addAresta(2, 1, 10);
 

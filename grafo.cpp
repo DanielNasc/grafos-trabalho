@@ -464,8 +464,6 @@ std::vector<int> Grafo::caminhoMinimo(int v, int w) {
     handles[v] = heap.push(std::make_pair(v, 0));
     onHeap.insert(v);
 
-    // Map dos nós para os seus respectivos ponteiros no heap
-
     // Enquanto o heap não estiver vazio, faça:
     while(!heap.empty()) {
         // Remover o nó com menor distância do heap. Vamos chamá-lo de nó atual.
@@ -550,6 +548,56 @@ int **Grafo::custoMinimo(int v) {
     int **dist_predecessor = new int*[2];
     dist_predecessor[0] = dist.data();
     dist_predecessor[1] = predecessor.data();
+
+    return dist_predecessor;
+}
+
+// Devolve os caminhos mínimos entre vi ∈ V (G) e todos os demais vértices de G;
+// Usando o algoritmo de Dijkstra
+std::vector<std::pair<int, int>> Grafo::caminhoMinimo(int v) {
+    std::vector<int> dist(this->V, INT_MAX);
+    std::vector<int> predecessor(this->V, null_parent);
+
+    dist[v] = 0;
+
+    // Criar um heap de Fibonacci e inserir o nó de origem com distância 0.
+    boost::heap::fibonacci_heap<std::pair<int, int>, boost::heap::compare<std::greater<std::pair<int, int>>>> heap;
+    std::map<int, boost::heap::fibonacci_heap<std::pair<int, int>, boost::heap::compare<std::greater<std::pair<int, int>>>>::handle_type> handles;
+
+    handles[v] = heap.push(std::make_pair(v, 0));
+
+    // Enquanto o heap não estiver vazio, faça:
+    while(!heap.empty()) {
+        // Remover o nó com menor distância do heap. Vamos chamá-lo de nó atual.
+        int u = heap.top().first;
+        heap.pop();
+
+        // Para cada vizinho v do nó atual, faça:
+        for (const auto& E : listaAdj[u]) {
+            int w = E.first;
+            int peso = E.second;
+
+            // Se a distância do nó atual + peso da aresta (u, v) for menor que a distância de v, então atualize a distância de v.
+            if (dist[u] + peso < dist[w]) {
+                dist[w] = dist[u] + peso;
+                predecessor[w] = u;
+
+                if (handles.find(w) == handles.end()) {
+                    // Inserir v no heap
+                    handles[w] = heap.push(std::make_pair(w, dist[w]));
+                } else {
+                    // Atualizar a distância de v no heap
+                    heap.update(handles[w], std::make_pair(w, dist[w]));
+                }
+            }
+        }
+    }
+
+    std::vector<std::pair<int, int>> dist_predecessor;
+
+    for (int i = 0; i < this->V; ++i) {
+        dist_predecessor.push_back(std::make_pair(dist[i], predecessor[i]));
+    }
 
     return dist_predecessor;
 }
