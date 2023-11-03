@@ -216,7 +216,6 @@ Um grafo é uma árvore quando obedece as seguintes propriedades:
     1. Acíclico
     2. Conexo
     3. Tem exatamente n - 1 arestas, onde n é o número de vértices na árvore.*/
-
 bool Grafo::isArvore() {
     // Verifica se o grafo é acíclico (não contém ciclos)
     if (ContemCiclo()) {
@@ -511,4 +510,46 @@ std::vector<int> Grafo::caminhoMinimo(int v, int w) {
     std::reverse(caminho.begin(), caminho.end());
 
     return caminho;
+}
+
+// Bellman-Ford
+int **Grafo::custoMinimo(int v) {
+    std::vector<int> dist(this->V, INT_MAX);
+    std::vector<int> predecessor(this->V, null_parent);
+
+    dist[v] = 0;
+
+    // Relaxar todas as arestas V - 1 vezes
+    for (int i = 0; i < this->V -1; ++i) {
+        for (int u = 0; u < this->V; ++u) {
+            for (const auto& edge : listaAdj[u]) {
+                int w = edge.first;
+                int peso = edge.second;
+
+                if (dist[u] != INT_MAX && dist[u] + peso < dist[w]) {
+                    dist[w] = dist[u] + peso;
+                    predecessor[w] = u;
+                }
+            }
+        }
+    }
+
+    // Verificar se há ciclos negativos
+    for (int u = 0; u < this->V - 1; ++u) {
+        for (const auto& edge : listaAdj[u]) {
+            int w = edge.first;
+            int peso = edge.second;
+
+            if (dist[u] != INT_MAX && dist[u] + peso < dist[w]) {
+                std::cerr << "O grafo contém ciclos negativos!" << std::endl;
+                return nullptr;
+            }
+        }
+    }
+
+    int **dist_predecessor = new int*[2];
+    dist_predecessor[0] = dist.data();
+    dist_predecessor[1] = predecessor.data();
+
+    return dist_predecessor;
 }
