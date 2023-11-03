@@ -31,5 +31,6 @@ class Grafo {
         void BFS(int v);                                        // Percorre o grafo em largura a partir do vértice v;
         bool ContemCiclo();
         bool DFSContemCiclo(int v, std::set<int>& visitados, std::set<int>& pilhaRecursao);
-
+        std::vector<int> caminhoMinimo(int v, int w);            // Retorna o caminho mínimo entre os vértices v e w em G;
+        std::vector<int> custoMinimo(int v, int w);              // Retorna o custo mínimo entre os vértices v e w em G;
 };

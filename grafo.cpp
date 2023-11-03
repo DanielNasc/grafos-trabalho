@@ -7,6 +7,8 @@
 #include <queue>
 #include <set>
 #include <map>
+#include <climits>
+#include <boost/heap/fibonacci_heap.hpp>
 
 #include "grafo.h"
 
@@ -129,13 +131,13 @@ bool Grafo::existeAresta(int v, int w, int p) {
 /*
  Função que modifica o peso da aresta (v, w) de um valor p -> pn
  Entradas:
-    v -> vértice origem
-    w -> vértice destino
-    p -> peso da aresta (v, w)
-    np -> novo peso da aresta (v, w)
+    @param v vértice origem
+    @param w vértice destino
+    @param p peso da aresta (v, w)
+    @param np novo peso da aresta (v, w)
 Saídas: 
-    true -> se a mudança ocorre com sucesso
-    false -> se ocorrerem erros
+    @return true se a mudança ocorre com sucesso
+    @return false se ocorrerem erros
  */ 
 bool Grafo::mudaPeso(int v, int w, int p, int np) {
     if (this->isVertice(v) && this->isVertice(w)) {
@@ -439,4 +441,74 @@ void Grafo::BFS(int v) {
             std::cout << "(" << vi << ", " << "raiz" << ")" << std::endl;
         }
     }
+}
+
+
+std::vector<int> Grafo::caminhoMinimo(int v, int w) {
+    if (!this->isVertice(v) || !this->isVertice(w)) {
+        std::cerr << "Vértice inválido!" << std::endl;
+        return std::vector<int>();
+    }
+
+    // Criar uma lista de distâncias (dist) e inicializá-la com infinito para todos os vértices do grafo.
+    std::vector<int> dist(this->V, INT_MAX);
+    dist[v] = 0;
+
+    std::vector<int> pai(this->V, -1);
+    pai[v] = INT_MIN;
+
+    std::set<int> onHeap;
+
+    // Criar um heap de Fibonacci e inserir o nó de origem com distância 0.
+    boost::heap::fibonacci_heap<std::pair<int, int>, boost::heap::compare<std::greater<std::pair<int, int>>>> heap;
+    std::map<int, boost::heap::fibonacci_heap<std::pair<int, int>, boost::heap::compare<std::greater<std::pair<int, int>>>>::handle_type> handles;
+    handles[v] = heap.push(std::make_pair(v, 0));
+    onHeap.insert(v);
+
+    // Map dos nós para os seus respectivos ponteiros no heap
+
+    // Enquanto o heap não estiver vazio, faça:
+    while(!heap.empty()) {
+        // Remover o nó com menor distância do heap. Vamos chamá-lo de nó atual.
+        int u = heap.top().first;
+        heap.pop();
+        onHeap.erase(u);
+
+        // Para cada vizinho v do nó atual, faça:
+        for (const auto& E : listaAdj[u]) {
+            int v = E.first;
+            int peso = E.second;
+
+            // Se a distância do nó atual + peso da aresta (u, v) for menor que a distância de v, então atualize a distância de v.
+            if (dist[u] + peso < dist[v]) {
+                dist[v] = dist[u] + peso;
+                pai[v] = u;
+
+                if (onHeap.find(v) == onHeap.end()) {
+                    // Inserir v no heap
+                    handles[v] = heap.push(std::make_pair(v, dist[v]));
+                    onHeap.insert(v);
+                } else {
+                    // Atualizar a distância de v no heap
+                    heap.update(handles[v], std::make_pair(v, dist[v]));
+                }
+            }
+        }
+    }
+
+    // Retornar a lista de distâncias
+    std::vector<int> caminho;
+
+    int u = w;
+
+    while (u != v) {
+        caminho.push_back(u);
+        u = pai[u];
+    }
+
+    caminho.push_back(v);
+
+    std::reverse(caminho.begin(), caminho.end());
+
+    return caminho;
 }
