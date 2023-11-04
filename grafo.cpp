@@ -26,6 +26,49 @@ Grafo::Grafo(int V) {
     listaAdj.resize(V);
 }
 
+int **Grafo::matrizAdj() {
+    int **matriz = new int*[this->V];
+
+    for (int i = 0; i < this->V; ++i) {
+        matriz[i] = new int[this->V];
+
+        for (int j = 0; j < this->V; ++j) {
+            matriz[i][j] = 0;
+        }
+    }
+
+    for (int i = 0; i < this->V; ++i) {
+        for (const auto& E : listaAdj[i]) {
+            int j = E.first;
+            int peso = E.second;
+
+            matriz[i][j] = peso;
+        }
+    }
+
+    return matriz;
+
+}
+
+void Grafo::imprimeMatrizAdj() {
+    int **matriz = this->matrizAdj();
+
+    for (int i = 0; i < this->V; ++i) {
+        for (int j = 0; j < this->V; ++j) {
+            std::cout << matriz[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    for (int i = 0; i < this->V; ++i) {
+        delete[] matriz[i];
+    }
+
+    delete[] matriz;
+}
+
+
+
  /*
  Função que adiciona uma aresta direcionada com peso
  Entradas:
