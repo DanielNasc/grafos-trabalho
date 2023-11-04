@@ -47,7 +47,26 @@ int **Grafo::matrizAdj() {
     }
 
     return matriz;
+}
 
+int *Grafo::incidentes(int v) {
+    if (!this->isVertice(v)) {
+        std::cerr << "Vértice inválido!" << std::endl;
+        return nullptr;
+    }
+
+    int *incidentes = new int[this->V];
+
+    for (int i = 0; i < this->V; ++i) {
+        incidentes[i] = 0;
+    }
+
+    for (const auto& E : listaAdj[v]) {
+        int w = E.first;
+        incidentes[w]++;
+    }
+
+    return incidentes;
 }
 
 void Grafo::imprimeMatrizAdj() {
